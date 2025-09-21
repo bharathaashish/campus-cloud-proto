@@ -28,3 +28,22 @@ Project layout (important files)
 Notes
 
 - This is a small scaffold. You can replace JS with TypeScript or expand the store to use reducers or Zustand/Redux.
+
+Running frontend and backend together
+
+If you have separate `frontend` and `backend` folders with their own start scripts, you can run both at once using `concurrently` from the root.
+
+1. Install concurrently as a dev dependency (if not installed):
+
+```bash
+npm install -D concurrently
+```
+
+2. From the root, run:
+
+```bash
+npm start
+```
+
+This uses the `start` script in `package.json` to run:
+`npm start --prefix frontend` and `npm start --prefix backend` concurrently.

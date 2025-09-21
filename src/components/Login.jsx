@@ -7,8 +7,11 @@ import { useAppContext } from '../context/AppContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
+  const [role, setRole] = useState('student')
+  const [mode, setMode] = useState('login') // login or signup
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const { user, login, logout, isLoggedIn } = useAppContext()
+  const { user, login, logout, isLoggedIn, signUp, signIn } = useAppContext()
 
   function validateCollegeEmail(value) {
     if (!value) return false
@@ -19,7 +22,7 @@ export default function Login() {
     return value.toLowerCase().endsWith('.edu')
   }
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
     setError('')
     const trimmed = email.trim()
@@ -27,9 +30,17 @@ export default function Login() {
       setError('Please enter a valid college email address (must end with .edu).')
       return
     }
+    if (mode === 'signup') {
+      if (!password) return setError('Password required for sign up')
+      const res = signUp({ email: trimmed, password, role })
+      if (!res.success) return setError(res.message || 'Sign up failed')
+      return
+    }
 
-    // Persisted via context (which writes to localStorage)
-    login({ email: trimmed })
+    // login mode
+    if (!password) return setError('Password required')
+    const res = signIn({ email: trimmed, password })
+    if (!res.success) return setError(res.message || 'Login failed')
   }
 
   if (isLoggedIn && user) {
@@ -43,16 +54,43 @@ export default function Login() {
   }
 
   return (
-    <form onSubmit={submit}>
-      <h2>Login</h2>
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="yourname@college.edu"
-        aria-label="college-email"
-      />
+    <div>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+        <button onClick={() => setMode('login')} disabled={mode === 'login'}>Login</button>
+        <button onClick={() => setMode('signup')} disabled={mode === 'signup'}>Sign Up</button>
+      </div>
+      <form onSubmit={submit}>
+        <h2>{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
+      <div>
+        <label>
+          Email
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="yourname@college.edu"
+            aria-label="college-email"
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Password
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </label>
+      </div>
+      <div>
+        <label>
+          Role
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+      </div>
       <button type="submit">Login</button>
       {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
     </form>
+    </div>
   )
 }
