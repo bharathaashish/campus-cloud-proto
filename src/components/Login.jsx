@@ -88,7 +88,7 @@ export default function Login() {
           </select>
         </label>
       </div>
-      <button type="submit">Login</button>
+  <button type="submit">{mode === 'login' ? 'Login' : 'Sign Up'}</button>
       {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
     </form>
     </div>
