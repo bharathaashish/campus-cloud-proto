@@ -1,0 +1,11 @@
+:root{
+  --bg:#f7f7fb;
+  --accent:#2563eb;
+}
+body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); margin:0}
+.app{max-width:900px;margin:24px auto;padding:16px;background:white;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+.header nav a{margin-right:12px;color:var(--accent);text-decoration:none}
+input,textarea,button{padding:8px;border:1px solid #ddd;border-radius:6px}
+textarea{width:100%;height:80px}
+.search-results{list-style:none;padding:8px;margin:8px 0;background:#fff;border:1px solid #eee}
