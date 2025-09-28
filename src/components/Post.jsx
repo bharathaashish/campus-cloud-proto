@@ -80,43 +80,50 @@ export default function Post() {
   }
 
   return (
-    <form onSubmit={submit}>
-      <h2>Create Post</h2>
+    <form onSubmit={submit} className="max-w-2xl mx-auto space-y-6">
+      <h2 className="text-3xl font-bold text-gray-800 text-center">Create Post</h2>
       <div>
-        <label>
-          Title
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-        </label>
+        <label className="block text-sm font-medium mb-2">Title</label>
+        <input 
+          value={title} 
+          onChange={(e) => setTitle(e.target.value)} 
+          placeholder="Title" 
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
       <div>
-        <label>
-          Description
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" />
-        </label>
+        <label className="block text-sm font-medium mb-2">Description</label>
+        <textarea 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
+          placeholder="Description"
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        />
       </div>
 
       <div>
-        <label>
-          Resource type
-          <select value={resourceType} onChange={(e) => setResourceType(e.target.value)}>
-            <option value="notes">Notes (text)</option>
-            <option value="file">File (image / pdf)</option>
-            <option value="link">Link</option>
-          </select>
-        </label>
+        <label className="block text-sm font-medium mb-2">Resource type</label>
+        <select 
+          value={resourceType} 
+          onChange={(e) => setResourceType(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="notes">Notes (text)</option>
+          <option value="file">File (image / pdf)</option>
+          <option value="link">Link</option>
+        </select>
       </div>
 
       {resourceType === 'file' && (
         <div>
-          <label>
-            Upload file
-            <input type="file" accept="image/*,application/pdf" onChange={handleFile} />
-          </label>
+          <label className="block text-sm font-medium mb-2">Upload file</label>
+          <input type="file" accept="image/*,application/pdf" onChange={handleFile} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
           {fileData && (
-            <div style={{ marginTop: 8 }}>
-              <strong>{fileData.name}</strong>
-              {fileData.type.startsWith('image/') && <div><img src={fileData.data} alt="preview" style={{ maxWidth: 200 }} /></div>}
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <strong className="block mb-2">{fileData.name}</strong>
+              {fileData.type.startsWith('image/') && <img src={fileData.data} alt="preview" className="max-w-48 rounded-lg" />}
             </div>
           )}
         </div>
@@ -124,19 +131,27 @@ export default function Post() {
 
       {resourceType === 'link' && (
         <div>
-          <label>
-            Link URL
-            <input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." />
-          </label>
+          <label className="block text-sm font-medium mb-2">Link URL</label>
+          <input 
+            value={link} 
+            onChange={(e) => setLink(e.target.value)} 
+            placeholder="https://..." 
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       )}
 
-      <div style={{ marginTop: 12 }}>
-        <button type="submit">Add Post</button>
-      </div>
+      <button 
+        type="submit" 
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"
+      >
+        Add Post
+      </button>
 
       {message && (
-        <div style={{ marginTop: 8, color: message.type === 'error' ? 'red' : 'green' }}>{message.text}</div>
+        <div className={`mt-4 p-3 rounded-lg ${message.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`}>
+          {message.text}
+        </div>
       )}
     </form>
   )
