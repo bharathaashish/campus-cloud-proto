@@ -46,6 +46,17 @@ export default function Admin() {
                     <h3 className="font-bold text-lg text-gray-900">{p.title}</h3>
                     <p className="text-sm text-gray-600">by {p.authorEmail || p.author}</p>
                     <p className="text-gray-700 mt-2">{p.description}</p>
+                    <p className="text-sm text-gray-500 mt-1">Type: {p.resourceType}</p>
+                    {p.resourceType === 'file' && p.file && (
+                      <p className="text-sm text-blue-600 mt-1">
+                        File: <a href={p.file} target="_blank" rel="noopener noreferrer" className="underline">View File</a>
+                      </p>
+                    )}
+                    {p.resourceType === 'link' && p.link && (
+                      <p className="text-sm text-blue-600 mt-1">
+                        Link: <a href={p.link} target="_blank" rel="noopener noreferrer" className="underline">Open Link</a>
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-3">
                     <button

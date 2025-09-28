@@ -26,47 +26,7 @@ export function AppProvider({ children }) {
       // ignore
     }
 
-    return [
-      {
-        id: 1,
-        title: 'Free Intro CS Textbooks',
-        author: 'Prof. Smith',
-        authorEmail: 'prof.smith@college.edu.in',
-        authorRole: 'teacher',
-        description: 'A set of introductory computer science textbooks available for pickup.',
-        resourceType: 'pdf',
-        likes: 12,
-        dislikes: 1,
-        thumbnail: null,
-        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 8,
-      },
-      {
-        id: 2,
-        title: 'Calculus Notes (handwritten)',
-        author: 'Student Group',
-        authorEmail: 'students@college.edu.in',
-        authorRole: 'student',
-        description: 'Comprehensive notes covering first-year calculus topics.',
-        resourceType: 'notes',
-        likes: 8,
-        dislikes: 0,
-        thumbnail: null,
-        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 20,
-      },
-      {
-        id: 3,
-        title: 'Used Laptop (good condition)',
-        author: 'Alice',
-        authorEmail: 'alice@college.edu.in',
-        authorRole: 'student',
-        description: 'Lightly used laptop available for sale or trade.',
-        resourceType: 'hardware',
-        likes: 20,
-        dislikes: 2,
-        thumbnail: null,
-        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
-      },
-    ]
+    return []
   })
 
   const [reports, setReports] = useState(() => {
@@ -174,7 +134,7 @@ export function AppProvider({ children }) {
     setUser(null)
   }
 
-  // Add post with rate limit (1 post per 7 days per user)
+  // Add post with rate limit (1 post per 7 days per student only)
   // Returns { success: boolean, message?: string }
   function addPost(post) {
     // must have a logged in user with email
@@ -183,14 +143,17 @@ export function AppProvider({ children }) {
     const now = Date.now()
     const oneWeek = 1000 * 60 * 60 * 24 * 7
 
-    // find the latest post by this user
-    const latest = posts
-      .filter((p) => p.authorEmail && p.authorEmail === user.email)
-      .sort((a, b) => b.createdAt - a.createdAt)[0]
+    // Rate limit only for students
+    if (user.role === 'student') {
+      // find the latest post by this user
+      const latest = posts
+        .filter((p) => p.authorEmail && p.authorEmail === user.email)
+        .sort((a, b) => b.createdAt - a.createdAt)[0]
 
-    if (latest && now - latest.createdAt < oneWeek) {
-      const remaining = Math.ceil((oneWeek - (now - latest.createdAt)) / (1000 * 60 * 60 * 24))
-      return { success: false, message: `You can only post once per week. Please wait ${remaining} day(s).` }
+      if (latest && now - latest.createdAt < oneWeek) {
+        const remaining = Math.ceil((oneWeek - (now - latest.createdAt)) / (1000 * 60 * 60 * 24))
+        return { success: false, message: `You can only post once per week. Please wait ${remaining} day(s).` }
+      }
     }
 
     const newPost = {
@@ -213,9 +176,10 @@ export function AppProvider({ children }) {
         const likedBy = new Set(r.likedBy || [])
         const dislikedBy = new Set(r.dislikedBy || [])
         if (likedBy.has(user.email)) return r // already liked
+        const wasDisliked = dislikedBy.has(user.email)
         likedBy.add(user.email)
         dislikedBy.delete(user.email)
-        return { ...r, likes: (r.likes || 0) + 1, dislikes: Math.max(0, (r.dislikes || 0) - (dislikedBy.has(user.email) ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
+        return { ...r, likes: (r.likes || 0) + 1, dislikes: Math.max(0, (r.dislikes || 0) - (wasDisliked ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
       })
     )
     return { success: true }
@@ -229,9 +193,10 @@ export function AppProvider({ children }) {
         const likedBy = new Set(r.likedBy || [])
         const dislikedBy = new Set(r.dislikedBy || [])
         if (dislikedBy.has(user.email)) return r // already disliked
+        const wasLiked = likedBy.has(user.email)
         dislikedBy.add(user.email)
         likedBy.delete(user.email)
-        return { ...r, dislikes: (r.dislikes || 0) + 1, likes: Math.max(0, (r.likes || 0) - (likedBy.has(user.email) ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
+        return { ...r, dislikes: (r.dislikes || 0) + 1, likes: Math.max(0, (r.likes || 0) - (wasLiked ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
       })
     )
     return { success: true }

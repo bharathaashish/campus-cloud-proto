@@ -48,7 +48,7 @@ export default function Featured() {
                 <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
                 <p className="text-sm text-gray-600 mb-2">Posted by {p.author} • {p.resourceType}</p>
                 <p className="text-gray-700 text-sm mb-4">{p.description}</p>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                   <button
                     onClick={() => {
                       reportPost(p.id, 'Inappropriate or spam')
@@ -57,6 +57,24 @@ export default function Featured() {
                   >
                     Report
                   </button>
+                  {p.file && (
+                    <button
+                      onClick={() => window.open(p.file.data, '_blank')}
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      View File
+                    </button>
+                  )}
+                  {p.link && (
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      Open Link
+                    </a>
+                  )}
                 </div>
               </div>
               {p.thumbnail && (
