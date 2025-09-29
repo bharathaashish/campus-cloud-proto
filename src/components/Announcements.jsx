@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
+import FileViewer from './FileViewer'
 
 export default function Announcements() {
   const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
   const [reported, setReported] = useState({})
+  const [viewerOpen, setViewerOpen] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
 
   const announcements = posts.filter((p) => p.authorRole === 'admin' || p.authorEmail === 'admin@college.edu.in')
 
@@ -80,12 +83,21 @@ export default function Announcements() {
                     </button>
                   )}
                   {p.file && (
-                    <button
-                      onClick={() => window.open(p.file.data, '_blank')}
-                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setSelectedFile(p.file)
+                        setViewerOpen(true)
+                      }}
                     >
-                      View File
-                    </button>
+                      {p.file.type.startsWith('image/') ? (
+                        <img src={p.file.data} alt="preview" className="w-24 h-24 object-cover rounded" />
+                      ) : (
+                        <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded text-sm font-medium">
+                          PDF
+                        </div>
+                      )}
+                    </div>
                   )}
                   {p.link && (
                     <a
@@ -109,6 +121,7 @@ export default function Announcements() {
           </article>
         ))}
       </div>
+      {viewerOpen && <FileViewer file={selectedFile} onClose={() => { setViewerOpen(false); setSelectedFile(null); }} />}
     </div>
   )
 }

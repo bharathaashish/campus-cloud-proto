@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
+import FileViewer from './FileViewer'
 
 export default function Home() {
   const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
   const [reported, setReported] = useState({})
+  const [viewerOpen, setViewerOpen] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
 
   useEffect(() => {
     if (posts.length > 0) {
@@ -51,6 +54,23 @@ export default function Home() {
                   >
                     Report
                   </button>
+                )}
+                {p.file && (
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setSelectedFile(p.file)
+                      setViewerOpen(true)
+                    }}
+                  >
+                    {p.file.type.startsWith('image/') ? (
+                      <img src={p.file.data} alt="preview" className="w-16 h-16 object-cover rounded" />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded text-xs font-medium">
+                        PDF
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
               {reported[p.id] && <div className="bg-orange-50 text-orange-700 text-sm p-2 mt-2 rounded">Reported — admin will review</div>}
@@ -129,6 +149,7 @@ export default function Home() {
           </div>
         ))}
       </div>
+      {viewerOpen && <FileViewer file={selectedFile} onClose={() => { setViewerOpen(false); setSelectedFile(null); }} />}
     </div>
   )
 }
