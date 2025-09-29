@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 
 export default function Featured() {
-  const { posts, likePost, dislikePost, reportPost, user, isLoggedIn } = useAppContext()
+  const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn } = useAppContext()
+  const [reported, setReported] = useState({})
   const featured = posts.filter((p) => p.authorRole === 'teacher')
 
   if (featured.length === 0) {
@@ -49,14 +50,20 @@ export default function Featured() {
                 <p className="text-sm text-gray-600 mb-2">Posted by {p.author} • {p.resourceType}</p>
                 <p className="text-gray-700 text-sm mb-4">{p.description}</p>
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                  <button
-                    onClick={() => {
-                      reportPost(p.id, 'Inappropriate or spam')
-                    }}
-                    className="hover:text-orange-600 transition-colors"
-                  >
-                    Report
-                  </button>
+                  {reports.some(r => r.postId === p.id && r.reporter === user.email) ? (
+                    <span className="text-orange-600">Already reported</span>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        const res = reportPost(p.id, 'Inappropriate or spam')
+                        if (!res.success) alert(res.message)
+                        else setReported((s) => ({ ...s, [p.id]: true }))
+                      }}
+                      className="hover:text-orange-600 transition-colors"
+                    >
+                      Report
+                    </button>
+                  )}
                   {p.file && (
                     <button
                       onClick={() => window.open(p.file.data, '_blank')}
@@ -76,6 +83,7 @@ export default function Featured() {
                     </a>
                   )}
                 </div>
+                {reported[p.id] && <div className="bg-orange-50 text-orange-700 text-sm p-2 mt-2 rounded">Reported — admin will review</div>}
               </div>
               {p.thumbnail && (
                 <div className="w-24 h-24 bg-gray-100 flex items-center justify-center overflow-hidden">

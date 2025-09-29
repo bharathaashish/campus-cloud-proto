@@ -4,6 +4,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Post from './components/Post'
 import Featured from './components/Featured'
+import Announcements from './components/Announcements'
 import SearchBar from './components/SearchBar'
 import Admin from './components/Admin'
 import Reports from './components/Reports'
@@ -40,6 +41,7 @@ export default function App() {
               <Link to="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</Link>
               <Link to="/post" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Create Post</Link>
               <Link to="/featured" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Featured</Link>
+              <Link to="/announcements" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Announcements</Link>
               <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Account</Link>
               {isAdmin && <Link to="/reports" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Review</Link>}
             </nav>
@@ -58,6 +60,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/post" element={<RequireAuth><Post /></RequireAuth>} />
               <Route path="/featured" element={<RequireAuth><Featured /></RequireAuth>} />
+              <Route path="/announcements" element={<RequireAuth><Announcements /></RequireAuth>} />
               <Route path="/reports" element={<RequireAuth adminOnly={true}><Reports /></RequireAuth>} />
             </Routes>
           </div>
