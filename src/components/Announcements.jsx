@@ -1,11 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 
 export default function Announcements() {
-  const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn } = useAppContext()
+  const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
   const [reported, setReported] = useState({})
 
-  const announcements = posts.filter((p) => p.authorRole === 'admin')
+  const announcements = posts.filter((p) => p.authorRole === 'admin' || p.authorEmail === 'admin@college.edu.in')
+
+  useEffect(() => {
+    if (announcements.length > 0) {
+      const viewedPosts = JSON.parse(sessionStorage.getItem('viewedPosts') || '[]')
+      const newViewed = [...viewedPosts]
+      announcements.forEach((p) => {
+        if (!newViewed.includes(p.id)) {
+          incrementView(p.id)
+          newViewed.push(p.id)
+        }
+      })
+      sessionStorage.setItem('viewedPosts', JSON.stringify(newViewed))
+    }
+  }, [announcements, incrementView])
 
   if (announcements.length === 0) {
     return (
@@ -48,7 +62,7 @@ export default function Announcements() {
               </div>
               <div className="flex-1 p-4">
                 <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
-                <p className="text-sm text-gray-600 mb-2">Posted by {p.author} • {p.resourceType}</p>
+                <p className="text-sm text-gray-600 mb-2">Posted by {p.author} • {p.resourceType} • 👁 {p.views || 0}</p>
                 <p className="text-gray-700 text-sm mb-4">{p.description}</p>
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                   {reports.some(r => r.postId === p.id && r.reporter === user.email) ? (

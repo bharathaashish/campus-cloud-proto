@@ -104,8 +104,9 @@ export function AppProvider({ children }) {
       return { success: false, message: 'This account has been banned.' }
     }
 
-    // ensure role set (default student, admin for specific email)
-    const withRole = { ...userObj, role: userObj.role || (userObj.email === 'admin@college.edu.in' ? 'admin' : 'student') }
+    // ensure role set (teacher for @eec.srmrmp.edu.in, admin for admin@college.edu.in, else student)
+    const role = userObj.email === 'admin@college.edu.in' ? 'admin' : userObj.email.endsWith('@eec.srmrmp.edu.in') ? 'teacher' : 'student'
+    const withRole = { ...userObj, role }
     setUser(withRole)
     return { success: true }
   }
@@ -163,9 +164,19 @@ export function AppProvider({ children }) {
       authorEmail: user.email,
       authorRole: user.role || 'student',
       createdAt: now,
+      views: 0,
     }
     setPosts((p) => [newPost, ...p])
     return { success: true }
+  }
+
+  function incrementView(id) {
+    setPosts((prev) =>
+      prev.map((p) => {
+        if (p.id !== id) return p
+        return { ...p, views: (p.views || 0) + 1 }
+      })
+    )
   }
 
   function likePost(id) {
@@ -274,6 +285,7 @@ export function AppProvider({ children }) {
         deleteReport,
         bannedUsers,
         search,
+        incrementView,
       }}
     >
       {children}

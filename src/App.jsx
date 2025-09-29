@@ -5,6 +5,7 @@ import Login from './components/Login'
 import Post from './components/Post'
 import Featured from './components/Featured'
 import Announcements from './components/Announcements'
+import SearchResults from './components/SearchResults'
 import SearchBar from './components/SearchBar'
 import Admin from './components/Admin'
 import Reports from './components/Reports'
@@ -60,6 +61,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/post" element={<RequireAuth><Post /></RequireAuth>} />
               <Route path="/featured" element={<RequireAuth><Featured /></RequireAuth>} />
+              <Route path="/search" element={<RequireAuth><SearchResults /></RequireAuth>} />
               <Route path="/announcements" element={<RequireAuth><Announcements /></RequireAuth>} />
               <Route path="/reports" element={<RequireAuth adminOnly={true}><Reports /></RequireAuth>} />
             </Routes>
