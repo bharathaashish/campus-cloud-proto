@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 import FileViewer from './FileViewer'
+import PostModal from './PostModal'
 
 export default function Home() {
   const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
   const [reported, setReported] = useState({})
   const [viewerOpen, setViewerOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [postModalOpen, setPostModalOpen] = useState(false)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   useEffect(() => {
     if (posts.length > 0) {
@@ -104,10 +107,17 @@ export default function Home() {
       <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-800">Suggestions</h3>
       <div className="space-y-3">
         {suggestions.map((s) => (
-          <div key={s.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+          <div
+            key={s.id}
+            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+            onClick={() => {
+              setSelectedPost(s)
+              setPostModalOpen(true)
+            }}
+          >
             <div className="flex-1">
-              <strong className="block text-gray-900">{s.title}</strong>
-              <div className="text-xs text-gray-500">{s.author} • {s.resourceType}</div>
+              <h3 className="font-semibold text-lg text-gray-900">{s.title}</h3>
+              <p className="text-sm text-gray-600">{s.author} • {s.resourceType}</p>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -150,6 +160,15 @@ export default function Home() {
         ))}
       </div>
       {viewerOpen && <FileViewer file={selectedFile} onClose={() => { setViewerOpen(false); setSelectedFile(null); }} />}
+      {postModalOpen && selectedPost && (
+        <PostModal
+          post={selectedPost}
+          onClose={() => {
+            setPostModalOpen(false)
+            setSelectedPost(null)
+          }}
+        />
+      )}
     </div>
   )
 }
