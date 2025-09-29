@@ -122,30 +122,33 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   if (!isLoggedIn) return alert('Please log in to like')
                   likePost(s.id)
                 }}
                 disabled={isLoggedIn ? (s.likedBy || []).includes(user.email) : false}
                 className="text-green-600 hover:text-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                👍
+                👍 {s.likes || 0}
               </button>
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation()
                   if (!isLoggedIn) return alert('Please log in to dislike')
                   dislikePost(s.id)
                 }}
                 disabled={isLoggedIn ? (s.dislikedBy || []).includes(user.email) : false}
                 className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                👎
+                👎 {s.dislikes || 0}
               </button>
               {reports.some(r => r.postId === s.id && r.reporter === user.email) ? (
                 <span className="text-orange-600 text-sm">Reported</span>
               ) : (
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     const res = reportPost(s.id, 'Inappropriate or spam')
                     if (!res.success) alert(res.message)
                     else setReported((rep) => ({ ...rep, [s.id]: true }))
@@ -155,7 +158,7 @@ export default function Home() {
                   Report
                 </button>
               )}
-              <div className="text-red-500 font-bold">❤️ {s.likes || 0} | 👁 {s.views || 0}</div>
+              <span className="text-gray-600 text-sm">👁 {s.views || 0}</span>
             </div>
           </div>
         ))}
