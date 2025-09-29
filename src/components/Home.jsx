@@ -13,7 +13,8 @@ export default function Home() {
 
   useEffect(() => {
     if (posts.length > 0) {
-      const viewedPosts = JSON.parse(sessionStorage.getItem('viewedPosts') || '[]')
+      const viewedKey = 'viewedPosts_' + (user?.email || 'anonymous')
+      const viewedPosts = JSON.parse(localStorage.getItem(viewedKey) || '[]')
       const newViewed = [...viewedPosts]
       posts.forEach((p) => {
         if (!newViewed.includes(p.id)) {
@@ -21,9 +22,9 @@ export default function Home() {
           newViewed.push(p.id)
         }
       })
-      sessionStorage.setItem('viewedPosts', JSON.stringify(newViewed))
+      localStorage.setItem(viewedKey, JSON.stringify(newViewed))
     }
-  }, [posts, incrementView])
+  }, [posts, incrementView, user])
 
   const featured = posts.filter((p) => p.authorRole === 'teacher')
   const suggestions = [...posts].sort((a, b) => ((b.likes || 0) + (b.views || 0)) - ((a.likes || 0) + (a.views || 0))).slice(0, 5)

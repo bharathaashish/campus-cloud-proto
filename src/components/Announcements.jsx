@@ -12,7 +12,8 @@ export default function Announcements() {
 
   useEffect(() => {
     if (announcements.length > 0) {
-      const viewedPosts = JSON.parse(sessionStorage.getItem('viewedPosts') || '[]')
+      const viewedKey = 'viewedPosts_' + (user?.email || 'anonymous')
+      const viewedPosts = JSON.parse(localStorage.getItem(viewedKey) || '[]')
       const newViewed = [...viewedPosts]
       announcements.forEach((p) => {
         if (!newViewed.includes(p.id)) {
@@ -20,9 +21,9 @@ export default function Announcements() {
           newViewed.push(p.id)
         }
       })
-      sessionStorage.setItem('viewedPosts', JSON.stringify(newViewed))
+      localStorage.setItem(viewedKey, JSON.stringify(newViewed))
     }
-  }, [announcements, incrementView])
+  }, [announcements, incrementView, user])
 
   if (announcements.length === 0) {
     return (
