@@ -104,8 +104,8 @@ export function AppProvider({ children }) {
       return { success: false, message: 'This account has been banned.' }
     }
 
-    // ensure role set (default student)
-    const withRole = { ...userObj, role: userObj.role || 'student' }
+    // ensure role set (default student, admin for specific email)
+    const withRole = { ...userObj, role: userObj.role || (userObj.email === 'admin@college.edu.in' ? 'admin' : 'student') }
     setUser(withRole)
     return { success: true }
   }
@@ -203,8 +203,11 @@ export function AppProvider({ children }) {
   }
 
   function reportPost(postId, reason) {
+    if (!user || !user.email) return { success: false, message: 'Login required to report' }
+    const existing = reports.find(r => r.postId === postId && r.reporter === user.email)
+    if (existing) return { success: false, message: 'You have already reported this post.' }
     const now = Date.now()
-    const rep = { id: now, postId, reason: reason || '', reportedAt: now }
+    const rep = { id: now, postId, reason: reason || '', reportedAt: now, reporter: user.email }
     setReports((r) => [rep, ...r])
     return { success: true }
   }

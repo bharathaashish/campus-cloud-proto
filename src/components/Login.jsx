@@ -47,7 +47,7 @@ export default function Login() {
     return (
       <div className="max-w-md mx-auto">
         <h2 className="text-2xl font-bold mb-4">Account</h2>
-        <p className="mb-4">Logged in as <strong>{user.email}</strong></p>
+        <p className="mb-4">Logged in as <strong>{user.email}</strong> ({user.role})</p>
         <button onClick={() => logout()} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">Logout</button>
       </div>
     )
@@ -75,14 +75,16 @@ export default function Login() {
           <label className="block text-sm font-medium mb-1">Password</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+        {mode === 'signup' && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Role</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        )}
         <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors">{mode === 'login' ? 'Login' : 'Sign Up'}</button>
         {error && <div className="text-red-500 mt-2">{error}</div>}
       </form>

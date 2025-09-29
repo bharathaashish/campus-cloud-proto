@@ -6,12 +6,13 @@ import Post from './components/Post'
 import Featured from './components/Featured'
 import SearchBar from './components/SearchBar'
 import Admin from './components/Admin'
+import Reports from './components/Reports'
 import RequireAuth from './components/RequireAuth'
 import { useAppContext } from './context/AppContext'
 
 export default function App() {
   const { user } = useAppContext()
-  const isAdmin = user && ['admin@college.edu.in'].includes(user.email)
+  const isAdmin = user && user.role === 'admin'
   // If user is not logged in, show only the login/sign-up page
   if (!user) {
     return (
@@ -40,7 +41,7 @@ export default function App() {
               <Link to="/post" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Create Post</Link>
               <Link to="/featured" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Featured</Link>
               <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Account</Link>
-              {isAdmin && <Link to="/admin" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Admin</Link>}
+              {isAdmin && <Link to="/reports" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Review</Link>}
             </nav>
             <div className="flex items-center space-x-4">
               <SearchBar />
@@ -57,7 +58,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/post" element={<RequireAuth><Post /></RequireAuth>} />
               <Route path="/featured" element={<RequireAuth><Featured /></RequireAuth>} />
-              <Route path="/admin" element={<RequireAuth adminOnly={true}><Admin /></RequireAuth>} />
+              <Route path="/reports" element={<RequireAuth adminOnly={true}><Reports /></RequireAuth>} />
             </Routes>
           </div>
           <aside className="hidden lg:block w-80">

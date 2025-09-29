@@ -1,13 +1,10 @@
 import React from 'react'
 import { useAppContext } from '../context/AppContext'
 
-// Simple admin list - in a real app, admin checks are server-side
-const ADMIN_EMAILS = ['admin@college.edu.in']
-
 export default function Admin() {
   const { user, reports, posts, deletePost, banUser, deleteReport } = useAppContext()
 
-  if (!user || !ADMIN_EMAILS.includes(user.email)) {
+  if (!user || user.role !== 'admin') {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h2>
@@ -59,6 +56,16 @@ export default function Admin() {
                     )}
                   </div>
                   <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        if (p.file) window.open(p.file.data, '_blank')
+                        else if (p.link) window.open(p.link, '_blank')
+                        else alert('No content to review')
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      Review Post
+                    </button>
                     <button
                       onClick={() => deletePost(p.id)}
                       className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"

@@ -1,4 +1,6 @@
-- [x] Update Login.jsx: Change error message from '.edu' to '.edu.in', update placeholder from 'college.edu' to 'college.edu.in', update comment.
-- [x] Update AppContext.jsx: Change sample post authorEmails from '@college.edu' to '@college.edu.in'.
-- [x] Update Admin.jsx: Change ADMIN_EMAILS from '@college.edu' to '@college.edu.in'.
-- [x] Update App.jsx: Change admin email check from '@college.edu' to '@college.edu.in'.
+- [x] Hide role selection in login mode (only show in signup)
+- [x] Display user role in account section
+- [x] Add Review Post button in Admin panel for reported posts
+- [x] Create Review page for admins to view reported posts in a list format (removed Admin button, only Review for admins)
+- [x] Prevent users from reporting the same post multiple times
+- [x] Show who reported the post in the Review page
