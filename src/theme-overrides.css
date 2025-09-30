@@ -1,0 +1,41 @@
+/* Theme overrides */
+[data-theme="dark"] {
+  --tw-bg-gray-50: #5b5c5e;
+  --tw-bg-gray-100: #1c1c1c;
+  --tw-text-gray-100: #f9fafb;
+  --tw-bg-gray-200: #242424;
+  --tw-text-gray-600: #d1d5db;
+  --tw-bg-gray-800: #000000;
+  --tw-text-gray-500: #9ca3af;
+  --tw-text-gray-800: #f9fafb;
+  --tw-text-gray-900: #f9fafb;
+  --tw-bg-blue-600: #4b5563;
+  --tw-text-blue-600: #4b5563;
+  --tw-bg-red-600: #ef4444;
+  --tw-text-red-600: #ef4444;
+  --tw-bg-green-600: #10b981;
+  --tw-text-green-600: #10b981;
+  --tw-bg-orange-50: #374151;
+  --tw-text-orange-600: #ea580c;
+}
+
+[data-theme="bluePurple"] {
+  --tw-bg-gray-50: #f0f4ff;
+  --tw-bg-gray-100: #111827;
+  --tw-text-gray-100: #1e1b4b;
+  --tw-bg-gray-200: #c7d2fe;
+  --tw-text-gray-600: #6366f1;
+  --tw-bg-gray-800: #312e81;
+  --tw-text-gray-500: #6366f1;
+  --tw-text-gray-800: #1e1b4b;
+  --tw-bg-blue-600: #8b5cf6;
+  --tw-text-blue-600: #8b5cf6;
+  --tw-bg-red-600: #ef4444;
+  --tw-text-red-600: #ef4444;
+  --tw-bg-green-600: #10b981;
+  --tw-text-green-600: #10b981;
+  --tw-bg-orange-600: #ea580c;
+  --tw-bg-gray-600: #4b5563;
+  --tw-bg-orange-50: #fef3c7;
+  --tw-text-orange-600: #f59e0b;
+}

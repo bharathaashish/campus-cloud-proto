@@ -36,7 +36,10 @@ export default function Home() {
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
         {featured.length === 0 && <div className="text-gray-500">No featured posts</div>}
         {featured.map((p) => (
-          <div key={p.id} className="min-w-[280px] bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <div key={p.id} className="min-w-[280px] bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer" onClick={() => {
+            setSelectedPost(p)
+            setPostModalOpen(true)
+          }}>
             <div className="h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg flex items-center justify-center overflow-hidden">
               {p.thumbnail ? <img src={p.thumbnail} alt={p.title} className="w-full h-full object-cover" /> : <div className="text-xs uppercase text-gray-500 font-medium">{p.resourceType}</div>}
             </div>
@@ -60,17 +63,21 @@ export default function Home() {
                   </button>
                 )}
                 {p.file && (
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setSelectedFile(p.file)
-                      setViewerOpen(true)
-                    }}
-                  >
+                  <div>
                     {p.file.type.startsWith('image/') ? (
-                      <img src={p.file.data} alt="preview" className="w-16 h-16 object-cover rounded" />
+                      <img
+                        src={p.file.data}
+                        alt="preview"
+                        className="w-16 h-16 object-cover rounded"
+                      />
                     ) : (
-                      <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded text-xs font-medium">
+                      <div
+                        className="cursor-pointer w-16 h-16 bg-gray-200 flex items-center justify-center rounded text-xs font-medium"
+                        onClick={() => {
+                          setSelectedFile(p.file)
+                          setViewerOpen(true)
+                        }}
+                      >
                         PDF
                       </div>
                     )}

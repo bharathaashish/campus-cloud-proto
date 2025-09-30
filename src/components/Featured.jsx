@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
+import FileViewer from './FileViewer'
 
 export default function Featured() {
   const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
   const [reported, setReported] = useState({})
+  const [viewerOpen, setViewerOpen] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
 
   const featured = posts.filter((p) => p.authorRole === 'teacher')
 
@@ -80,12 +83,16 @@ export default function Featured() {
                     </button>
                   )}
                   {p.file && (
-                    <button
-                      onClick={() => window.open(p.file.data, '_blank')}
-                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                    <div
+                      className="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
+                      onClick={() => {
+                        // Open file in modal viewer instead of new tab
+                        setSelectedFile(p.file)
+                        setViewerOpen(true)
+                      }}
                     >
                       View File
-                    </button>
+                    </div>
                   )}
                   {p.link && (
                     <a
@@ -109,6 +116,7 @@ export default function Featured() {
           </article>
         ))}
       </div>
+      {viewerOpen && <FileViewer file={selectedFile} onClose={() => { setViewerOpen(false); setSelectedFile(null); }} />}
     </div>
   )
 }

@@ -7,6 +7,7 @@ const POSTS_KEY = 'campus_cloud_posts'
 const REPORTS_KEY = 'campus_cloud_reports'
 const BANS_KEY = 'campus_cloud_bans'
 const USERS_KEY = 'campus_cloud_users'
+const THEME_KEY = 'campus_cloud_theme'
 
 export function AppProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -56,6 +57,19 @@ export function AppProvider({ children }) {
     }
   })
 
+  const [theme, setThemeState] = useState(() => {
+    try {
+      const raw = localStorage.getItem(THEME_KEY)
+      return raw || 'dark'
+    } catch (e) {
+      return 'dark'
+    }
+  })
+
+  function setTheme(newTheme) {
+    setThemeState(newTheme)
+  }
+
   useEffect(() => {
     try {
       if (user) localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
@@ -96,6 +110,14 @@ export function AppProvider({ children }) {
       // ignore
     }
   }, [bannedUsers])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(THEME_KEY, theme)
+    } catch (e) {
+      // ignore
+    }
+  }, [theme])
 
   function login(userObj) {
     // userObj expected to be an object { email, name? }
@@ -286,6 +308,8 @@ export function AppProvider({ children }) {
         bannedUsers,
         search,
         incrementView,
+        theme,
+        setTheme,
       }}
     >
       {children}

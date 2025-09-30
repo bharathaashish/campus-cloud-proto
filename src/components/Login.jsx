@@ -48,7 +48,7 @@ export default function Login() {
       <div className="max-w-md mx-auto">
         <h2 className="text-2xl font-bold mb-4">Account</h2>
         <p className="mb-4">Logged in as <strong>{user.email}</strong> ({user.role})</p>
-        <button onClick={() => logout()} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">Logout</button>
+        <button onClick={() => logout()} className="bg-red-600 text-white px-4 py-2 rounded-lg">Logout</button>
       </div>
     )
   }
