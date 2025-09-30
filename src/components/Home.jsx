@@ -112,7 +112,7 @@ export default function Home() {
         ))}
       </div>
 
-      <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-800">Suggestions</h3>
+      <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">Suggestions</h3>
       <div className="space-y-3">
         {suggestions.map((s) => (
           <div

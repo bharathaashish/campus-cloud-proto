@@ -1,5 +1,5 @@
 /* Theme overrides */
-[data-theme="dark"] {
+[data-theme="monochrome"] {
   --tw-bg-gray-50: #5b5c5e;
   --tw-bg-gray-100: #1c1c1c;
   --tw-text-gray-100: #f9fafb;
@@ -19,11 +19,11 @@
   --tw-text-orange-600: #ea580c;
 }
 
-[data-theme="bluePurple"] {
-  --tw-bg-gray-50: #f0f4ff;
+[data-theme="Lavender"] {
+  --tw-bg-gray-50: #ddd6fe;
   --tw-bg-gray-100: #111827;
   --tw-text-gray-100: #1e1b4b;
-  --tw-bg-gray-200: #c7d2fe;
+  --tw-bg-gray-200: #7c3aed;
   --tw-text-gray-600: #6366f1;
   --tw-bg-gray-800: #312e81;
   --tw-text-gray-500: #6366f1;
@@ -35,7 +35,7 @@
   --tw-bg-green-600: #10b981;
   --tw-text-green-600: #10b981;
   --tw-bg-orange-600: #ea580c;
-  --tw-bg-gray-600: #4b5563;
+  --tw-bg-gray-600: #553861;
   --tw-bg-orange-50: #fef3c7;
   --tw-text-orange-600: #f59e0b;
 }

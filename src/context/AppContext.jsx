@@ -60,9 +60,9 @@ export function AppProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     try {
       const raw = localStorage.getItem(THEME_KEY)
-      return raw || 'dark'
+      return raw || 'monochrome'
     } catch (e) {
-      return 'dark'
+      return 'monochrome'
     }
   })
 
