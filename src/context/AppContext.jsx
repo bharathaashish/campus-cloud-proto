@@ -1,65 +1,28 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import axios from 'axios'
 
 const AppContext = createContext(null)
 
-const STORAGE_KEY = 'campus_cloud_user'
-const POSTS_KEY = 'campus_cloud_posts'
-const REPORTS_KEY = 'campus_cloud_reports'
-const BANS_KEY = 'campus_cloud_bans'
-const USERS_KEY = 'campus_cloud_users'
-const THEME_KEY = 'campus_cloud_theme'
+const API_BASE = '/api'
 
 export function AppProvider({ children }) {
   const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('token')
+    if (!token) return null
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      return raw ? JSON.parse(raw) : null
-    } catch (e) {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      return { email: payload.email, role: payload.role, token }
+    } catch {
       return null
     }
   })
 
-  const [posts, setPosts] = useState(() => {
-    try {
-      const raw = localStorage.getItem(POSTS_KEY)
-      if (raw) return JSON.parse(raw)
-    } catch (e) {
-      // ignore
-    }
-
-    return []
-  })
-
-  const [reports, setReports] = useState(() => {
-    try {
-      const raw = localStorage.getItem(REPORTS_KEY)
-      return raw ? JSON.parse(raw) : []
-    } catch (e) {
-      return []
-    }
-  })
-
-  const [users, setUsers] = useState(() => {
-    try {
-      const raw = localStorage.getItem(USERS_KEY)
-      return raw ? JSON.parse(raw) : []
-    } catch (e) {
-      return []
-    }
-  })
-
-  const [bannedUsers, setBannedUsers] = useState(() => {
-    try {
-      const raw = localStorage.getItem(BANS_KEY)
-      return raw ? JSON.parse(raw) : []
-    } catch (e) {
-      return []
-    }
-  })
-
+  const [posts, setPosts] = useState([])
+  const [reports, setReports] = useState([])
+  const [bannedUsers, setBannedUsers] = useState([])
   const [theme, setThemeState] = useState(() => {
     try {
-      const raw = localStorage.getItem(THEME_KEY)
+      const raw = localStorage.getItem('campus_cloud_theme')
       return raw || 'monochrome'
     } catch (e) {
       return 'monochrome'
@@ -71,205 +34,175 @@ export function AppProvider({ children }) {
   }
 
   useEffect(() => {
-    try {
-      if (user) localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
-      else localStorage.removeItem(STORAGE_KEY)
-    } catch (e) {
-      // ignore localStorage errors
+    localStorage.setItem('campus_cloud_theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    if (user?.token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
+      fetchPosts()
+      fetchReports()
+      fetchBannedUsers()
+    } else {
+      delete axios.defaults.headers.common['Authorization']
+      setPosts([])
+      setReports([])
+      setBannedUsers([])
     }
   }, [user])
 
-  useEffect(() => {
+  async function fetchPosts() {
     try {
-      localStorage.setItem(POSTS_KEY, JSON.stringify(posts))
+      const res = await axios.get(`${API_BASE}/posts`)
+      setPosts(res.data)
     } catch (e) {
-      // ignore
+      console.error('Failed to fetch posts', e)
     }
-  }, [posts])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(REPORTS_KEY, JSON.stringify(reports))
-    } catch (e) {
-      // ignore
-    }
-  }, [reports])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(USERS_KEY, JSON.stringify(users))
-    } catch (e) {
-      // ignore
-    }
-  }, [users])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(BANS_KEY, JSON.stringify(bannedUsers))
-    } catch (e) {
-      // ignore
-    }
-  }, [bannedUsers])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(THEME_KEY, theme)
-    } catch (e) {
-      // ignore
-    }
-  }, [theme])
-
-  function login(userObj) {
-    // userObj expected to be an object { email, name? }
-    // prevent banned users from logging in
-    if (userObj && userObj.email && bannedUsers.includes(userObj.email)) {
-      return { success: false, message: 'This account has been banned.' }
-    }
-
-    // ensure role set (teacher for @eec.srmrmp.edu.in, admin for admin@college.edu.in, else student)
-    const role = userObj.email === 'admin@college.edu.in' ? 'admin' : userObj.email.endsWith('@eec.srmrmp.edu.in') ? 'teacher' : 'student'
-    const withRole = { ...userObj, role }
-    setUser(withRole)
-    return { success: true }
   }
 
-  // sign up: save user to users list and auto-login
-  function signUp({ email, password, role = 'student' }) {
-    if (!email || !password) return { success: false, message: 'Email and password required' }
-    const exists = users.find((u) => u.email === email)
-    if (exists) return { success: false, message: 'User already exists' }
-    const newUser = { email, password, role }
-    setUsers((u) => [newUser, ...u])
-    setUser({ email, role })
-    return { success: true }
+  async function fetchReports() {
+    if (user?.role !== 'admin') return
+    try {
+      const res = await axios.get(`${API_BASE}/reports`)
+      setReports(res.data)
+    } catch (e) {
+      console.error('Failed to fetch reports', e)
+    }
   }
 
-  // sign in: validate against users list
-  function signIn({ email, password }) {
-    const u = users.find((x) => x.email === email && x.password === password)
-    if (!u) return { success: false, message: 'Invalid credentials' }
-    if (bannedUsers.includes(email)) return { success: false, message: 'This account has been banned.' }
-    setUser({ email: u.email, role: u.role })
-    return { success: true }
+  async function fetchBannedUsers() {
+    if (user?.role !== 'admin') return
+    try {
+      const res = await axios.get(`${API_BASE}/bans`)
+      setBannedUsers(res.data.map(b => b.email))
+    } catch (e) {
+      console.error('Failed to fetch banned users', e)
+    }
+  }
+
+  async function login({ email, password }) {
+    try {
+      const res = await axios.post(`${API_BASE}/auth/signin`, { email, password })
+      const { token, user: userData } = res.data
+      setUser({ ...userData, token })
+      localStorage.setItem('token', token)
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Login failed' }
+    }
+  }
+
+  async function signUp({ email, password, role = 'student' }) {
+    try {
+      const res = await axios.post(`${API_BASE}/auth/signup`, { email, password, role })
+      const { token, user: userData } = res.data
+      setUser({ ...userData, token })
+      localStorage.setItem('token', token)
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Signup failed' }
+    }
   }
 
   function logout() {
     setUser(null)
+    localStorage.removeItem('token')
   }
 
-  // Add post with rate limit (1 post per 7 days per student only)
-  // Returns { success: boolean, message?: string }
-  function addPost(post) {
-    // must have a logged in user with email
-    if (!user || !user.email) return { success: false, message: 'You must be logged in to post.' }
-
-    const now = Date.now()
-    const oneWeek = 1000 * 60 * 60 * 24 * 7
-
-    // Rate limit only for students
-    if (user.role === 'student') {
-      // find the latest post by this user
-      const latest = posts
-        .filter((p) => p.authorEmail && p.authorEmail === user.email)
-        .sort((a, b) => b.createdAt - a.createdAt)[0]
-
-      if (latest && now - latest.createdAt < oneWeek) {
-        const remaining = Math.ceil((oneWeek - (now - latest.createdAt)) / (1000 * 60 * 60 * 24))
-        return { success: false, message: `You can only post once per week. Please wait ${remaining} day(s).` }
-      }
+  async function addPost(post) {
+    if (!user?.token) return { success: false, message: 'You must be logged in to post.' }
+    try {
+      const res = await axios.post(`${API_BASE}/posts`, post)
+      setPosts((p) => [res.data, ...p])
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to add post' }
     }
+  }
 
-    const newPost = {
-      id: Date.now(),
-      ...post,
-      author: user.email.split('@')[0],
-      authorEmail: user.email,
-      authorRole: user.role || 'student',
-      createdAt: now,
-      views: 0,
+  async function likePost(id) {
+    if (!user?.token) return { success: false, message: 'Login required to like' }
+    try {
+      const res = await axios.post(`${API_BASE}/posts/${id}/like`)
+      setPosts((prev) => prev.map((p) => (p._id === id ? res.data : p)))
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to like post' }
     }
-    setPosts((p) => [newPost, ...p])
-    return { success: true }
   }
 
-  function incrementView(id) {
-    setPosts((prev) =>
-      prev.map((p) => {
-        if (p.id !== id) return p
-        return { ...p, views: (p.views || 0) + 1 }
-      })
-    )
+  async function dislikePost(id) {
+    if (!user?.token) return { success: false, message: 'Login required to dislike' }
+    try {
+      const res = await axios.post(`${API_BASE}/posts/${id}/dislike`)
+      setPosts((prev) => prev.map((p) => (p._id === id ? res.data : p)))
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to dislike post' }
+    }
   }
 
-  function likePost(id) {
-    if (!user || !user.email) return { success: false, message: 'Login required to like' }
-    setPosts((prev) =>
-      prev.map((r) => {
-        if (r.id !== id) return r
-        const likedBy = new Set(r.likedBy || [])
-        const dislikedBy = new Set(r.dislikedBy || [])
-        if (likedBy.has(user.email)) return r // already liked
-        const wasDisliked = dislikedBy.has(user.email)
-        likedBy.add(user.email)
-        dislikedBy.delete(user.email)
-        return { ...r, likes: (r.likes || 0) + 1, dislikes: Math.max(0, (r.dislikes || 0) - (wasDisliked ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
-      })
-    )
-    return { success: true }
-  }
-
-  function dislikePost(id) {
-    if (!user || !user.email) return { success: false, message: 'Login required to dislike' }
-    setPosts((prev) =>
-      prev.map((r) => {
-        if (r.id !== id) return r
-        const likedBy = new Set(r.likedBy || [])
-        const dislikedBy = new Set(r.dislikedBy || [])
-        if (dislikedBy.has(user.email)) return r // already disliked
-        const wasLiked = likedBy.has(user.email)
-        dislikedBy.add(user.email)
-        likedBy.delete(user.email)
-        return { ...r, dislikes: (r.dislikes || 0) + 1, likes: Math.max(0, (r.likes || 0) - (wasLiked ? 1 : 0)), likedBy: Array.from(likedBy), dislikedBy: Array.from(dislikedBy) }
-      })
-    )
-    return { success: true }
-  }
-
-  function reportPost(postId, reason) {
-    if (!user || !user.email) return { success: false, message: 'Login required to report' }
-    const existing = reports.find(r => r.postId === postId && r.reporter === user.email)
+  async function reportPost(postId, reason) {
+    if (!user?.token) return { success: false, message: 'Login required to report' }
+    const existing = reports.find(r => r.postId?._id === postId && r.reporter === user.email)
     if (existing) return { success: false, message: 'You have already reported this post.' }
-    const now = Date.now()
-    const rep = { id: now, postId, reason: reason || '', reportedAt: now, reporter: user.email }
-    setReports((r) => [rep, ...r])
-    return { success: true }
+    try {
+      const res = await axios.post(`${API_BASE}/reports`, { postId, reason })
+      if (!res.data) return { success: false, message: 'Failed to report post' }
+      setReports((r) => [res.data, ...r])
+      return { success: true }
+    } catch (e) {
+      const errorMessage = e.response?.data?.message || e.response?.data?.errors?.[0]?.msg || 'Failed to report post'
+      return { success: false, message: errorMessage }
+    }
   }
 
-  function deletePost(postId) {
-    setPosts((p) => p.filter((x) => x.id !== postId))
-    // remove related reports
-    setReports((r) => r.filter((rep) => rep.postId !== postId))
-    return { success: true }
+  async function deletePost(postId) {
+    if (!user?.token) return { success: false, message: 'Login required' }
+    try {
+      await axios.delete(`${API_BASE}/posts/${postId}`)
+      setPosts((p) => p.filter((x) => x._id !== postId))
+      setReports((r) => r.filter((rep) => rep.postId?._id !== postId))
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to delete post' }
+    }
   }
 
-  function banUser(email) {
-    if (!email) return { success: false }
-    setBannedUsers((b) => (b.includes(email) ? b : [...b, email]))
-    // optionally remove user's posts
-    setPosts((p) => p.filter((post) => post.authorEmail !== email))
-    // remove related reports
-    setReports((r) => r.filter((rep) => {
-      const post = posts.find((x) => x.id === rep.postId)
-      return post && post.authorEmail !== email
-    }))
-    // if the banned user is currently logged in, log them out
-    if (user && user.email === email) setUser(null)
-    return { success: true }
+  async function banUser(email) {
+    if (!user?.token) return { success: false, message: 'Login required' }
+    try {
+      await axios.post(`${API_BASE}/bans`, { email })
+      setBannedUsers((b) => (b.includes(email) ? b : [...b, email]))
+      setPosts((p) => p.filter((post) => post.authorEmail !== email))
+      setReports((r) => r.filter((rep) => {
+        const post = posts.find((x) => x._id === rep.postId?._id)
+        return post && post.authorEmail !== email
+      }))
+      if (user.email === email) logout()
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to ban user' }
+    }
   }
 
-  function deleteReport(reportId) {
-    setReports((r) => r.filter((rep) => rep.id !== reportId))
-    return { success: true }
+  async function deleteReport(reportId) {
+    if (!user?.token) return { success: false, message: 'Login required' }
+    try {
+      await axios.delete(`${API_BASE}/reports/${reportId}`)
+      setReports((r) => r.filter((rep) => rep._id !== reportId))
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to delete report' }
+    }
+  }
+
+  async function incrementView(postId) {
+    try {
+      await axios.post(`${API_BASE}/posts/${postId}/view`)
+    } catch (e) {
+      console.error('Failed to increment view', e)
+    }
   }
 
   function search(query) {
@@ -294,7 +227,6 @@ export function AppProvider({ children }) {
         isLoggedIn,
         login,
         signUp,
-        signIn,
         logout,
         posts,
         addPost,

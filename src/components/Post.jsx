@@ -9,6 +9,7 @@ export default function Post() {
   const [fileData, setFileData] = useState(null)
   const [link, setLink] = useState('')
   const [message, setMessage] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
@@ -33,24 +34,29 @@ export default function Post() {
   async function submit(e) {
     e.preventDefault()
     setMessage(null)
+    setLoading(true)
 
     if (!isLoggedIn) {
       setMessage({ type: 'error', text: 'You must be logged in to post.' })
+      setLoading(false)
       return
     }
 
     if (!title.trim()) {
       setMessage({ type: 'error', text: 'Title is required.' })
+      setLoading(false)
       return
     }
 
     if (resourceType === 'file' && !fileData) {
       setMessage({ type: 'error', text: 'Please upload a file.' })
+      setLoading(false)
       return
     }
 
     if (resourceType === 'link' && !link.trim()) {
       setMessage({ type: 'error', text: 'Please provide a link.' })
+      setLoading(false)
       return
     }
 
@@ -64,19 +70,26 @@ export default function Post() {
       dislikes: 0,
     }
 
-    const res = addPost(payload)
-    if (!res || !res.success) {
-      setMessage({ type: 'error', text: res?.message || 'Failed to add post.' })
-      return
-    }
+    try {
+      const res = await addPost(payload)
+      if (!res.success) {
+        setMessage({ type: 'error', text: res.message || 'Failed to add post.' })
+        setLoading(false)
+        return
+      }
 
-    setMessage({ type: 'success', text: 'Post added.' })
-    // reset form
-    setTitle('')
-    setDescription('')
-    setFileData(null)
-    setLink('')
-    setResourceType('notes')
+      setMessage({ type: 'success', text: 'Post added.' })
+      // reset form
+      setTitle('')
+      setDescription('')
+      setFileData(null)
+      setLink('')
+      setResourceType('notes')
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to add post.' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -141,11 +154,12 @@ export default function Post() {
         </div>
       )}
 
-      <button 
-        type="submit" 
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors"
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
       >
-        Add Post
+        {loading ? 'Adding Post...' : 'Add Post'}
       </button>
 
       {message && (

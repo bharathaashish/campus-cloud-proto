@@ -11,7 +11,7 @@ export default function Login() {
   const [mode, setMode] = useState('login') // login or signup
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const { user, login, logout, isLoggedIn, signUp, signIn } = useAppContext()
+  const { user, login, logout, isLoggedIn, signUp } = useAppContext()
 
   function validateCollegeEmail(value) {
     if (!value) return false
@@ -32,14 +32,14 @@ export default function Login() {
     }
     if (mode === 'signup') {
       if (!password) return setError('Password required for sign up')
-      const res = signUp({ email: trimmed, password, role })
+      const res = await signUp({ email: trimmed, password, role })
       if (!res.success) return setError(res.message || 'Sign up failed')
       return
     }
 
     // login mode
     if (!password) return setError('Password required')
-    const res = signIn({ email: trimmed, password })
+    const res = await login({ email: trimmed, password })
     if (!res.success) return setError(res.message || 'Login failed')
   }
 

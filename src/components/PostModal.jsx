@@ -9,7 +9,7 @@ export default function PostModal({ post, onClose }) {
       <div className="bg-white rounded-lg max-w-3xl w-full max-h-full overflow-auto p-6 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
+          className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold"
           aria-label="Close"
         >
           &times;
@@ -21,10 +21,10 @@ export default function PostModal({ post, onClose }) {
         </p>
         {post.file && (
           <div className="mb-4">
-            {post.file.type.startsWith('image/') ? (
-              <img src={post.file.data} alt={post.title} className="max-w-full h-48 object-cover rounded" />
+            {post.file.startsWith('data:image/') ? (
+              <img src={post.file} alt={post.title} className="max-w-full h-48 object-cover rounded" />
             ) : (
-              <iframe src={post.file.data} className="w-full h-48" title="PDF Viewer" />
+              <iframe src={post.file} className="w-full h-48" title="File Viewer" />
             )}
           </div>
         )}
@@ -33,9 +33,9 @@ export default function PostModal({ post, onClose }) {
             href={post.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-blue-600 hover:text-blue-800 underline break-all"
           >
-            Open Link
+            {post.link}
           </a>
         )}
       </div>

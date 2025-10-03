@@ -1,0 +1,106 @@
+{
+  "info": {
+    "name": "Campus Cloud Extended API Tests",
+    "_postman_id": "87654321-abcd-efgh-ijkl-0987654321ba",
+    "description": "Postman collection for testing Campus Cloud backend API endpoints for reports, bans, and admin features",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Reports - Create Report",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"postId\":\"some-post-id\",\"reason\":\"Inappropriate content\"}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/reports",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "reports"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Reports - Get All Reports",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:5001/api/reports",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "reports"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Bans - Create Ban",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"banneduser@college.edu.in\",\"reason\":\"Violation of guidelines\"}"
+        },
+        "url": {
+          "raw": "http://localhost:5001/api/bans",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "bans"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Bans - Get All Bans",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:5001/api/bans",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5001",
+          "path": ["api", "bans"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

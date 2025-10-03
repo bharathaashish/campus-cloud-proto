@@ -1,6 +1,3 @@
-- [x] Hide role selection in login mode (only show in signup)
-- [x] Display user role in account section
-- [x] Add Review Post button in Admin panel for reported posts
-- [x] Create Review page for admins to view reported posts in a list format (removed Admin button, only Review for admins)
-- [x] Prevent users from reporting the same post multiple times
-- [x] Show who reported the post in the Review page
+- [x] Add e.stopPropagation() to like, dislike, report buttons in Featured.jsx
+- [x] Add e.stopPropagation() to like, dislike, report buttons in Announcements.jsx
+- [x] Update FileViewer.jsx to handle file as string for src and determine PDF type
