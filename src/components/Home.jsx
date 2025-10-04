@@ -40,18 +40,27 @@ export default function Home() {
             key={p._id}
             className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
             onClick={() => {
-              if (p.link || p.file) {
-                setSelectedFile(p.link || p.file)
-                setViewerOpen(true)
-              } else {
-                setSelectedPost(p)
-                setPostModalOpen(true)
-              }
+              // Always open the post modal so the link is visible inside the post view.
+              setSelectedPost(p)
+              setPostModalOpen(true)
             }}
           >
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-gray-900">{p.title}</h3>
               <p className="text-sm text-gray-600">{p.author} • {p.resourceType}</p>
+                {p.link && (
+                  <div className="mt-1">
+                    <a
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                    >
+                      {p.link}
+                    </a>
+                  </div>
+                )}
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -104,18 +113,26 @@ export default function Home() {
             key={s._id}
             className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
             onClick={() => {
-              if (s.link || s.file) {
-                setSelectedFile(s.link || s.file)
-                setViewerOpen(true)
-              } else {
-                setSelectedPost(s)
-                setPostModalOpen(true)
-              }
+              setSelectedPost(s)
+              setPostModalOpen(true)
             }}
           >
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-gray-900">{s.title}</h3>
               <p className="text-sm text-gray-600">{s.author} • {s.resourceType}</p>
+                {s.link && (
+                  <div className="mt-1">
+                    <a
+                      href={s.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                    >
+                      {s.link}
+                    </a>
+                  </div>
+                )}
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -170,6 +187,7 @@ export default function Home() {
           }}
         />
       )}
+      
     </div>
   )
 }

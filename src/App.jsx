@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import './theme-overrides.css'
 import Home from './components/Home'
-import Login from './components/Login'
+import Profile from './components/Profile'
 import Post from './components/Post'
 import Featured from './components/Featured'
 import Announcements from './components/Announcements'
@@ -38,7 +38,7 @@ export default function App() {
             <h1 className="text-3xl font-bold text-gray-900">Campus Cloud</h1>
             <p className="text-gray-600 mt-2">Sign in to access the community</p>
           </div>
-          <Login />
+          <Profile />
         </div>
       </div>
     )
@@ -55,7 +55,7 @@ export default function App() {
               <Link to="/post" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Create Post</Link>
               <Link to="/featured" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Featured</Link>
               <Link to="/announcements" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Announcements</Link>
-              <Link to="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Account</Link>
+              <Link to="/profile" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Profile</Link>
               {isAdmin && <Link to="/reports" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Review</Link>}
             </div>
             <div className="flex items-center space-x-4">
@@ -71,7 +71,7 @@ export default function App() {
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/post" element={<RequireAuth><Post /></RequireAuth>} />
               <Route path="/featured" element={<RequireAuth><Featured /></RequireAuth>} />
               <Route path="/search" element={<RequireAuth><SearchResults /></RequireAuth>} />

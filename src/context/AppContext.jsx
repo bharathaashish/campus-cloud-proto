@@ -92,9 +92,9 @@ export function AppProvider({ children }) {
     }
   }
 
-  async function signUp({ email, password, role = 'student' }) {
+  async function signUp({ email, password, role = 'student', firstName, lastName, dateOfBirth, course, specialization }) {
     try {
-      const res = await axios.post(`${API_BASE}/auth/signup`, { email, password, role })
+      const res = await axios.post(`${API_BASE}/auth/signup`, { email, password, role, firstName, lastName, dateOfBirth, course, specialization })
       const { token, user: userData } = res.data
       setUser({ ...userData, token })
       localStorage.setItem('token', token)
@@ -197,6 +197,17 @@ export function AppProvider({ children }) {
     }
   }
 
+  async function updateProfile(updates) {
+    if (!user?.token) return { success: false, message: 'Login required' }
+    try {
+      const res = await axios.put(`${API_BASE}/auth/me`, updates)
+      setUser({ ...user, ...res.data })
+      return { success: true }
+    } catch (e) {
+      return { success: false, message: e.response?.data?.message || 'Failed to update profile' }
+    }
+  }
+
   async function incrementView(postId) {
     try {
       await axios.post(`${API_BASE}/posts/${postId}/view`)
@@ -239,6 +250,7 @@ export function AppProvider({ children }) {
         deleteReport,
         bannedUsers,
         search,
+        updateProfile,
         incrementView,
         theme,
         setTheme,

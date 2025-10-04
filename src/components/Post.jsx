@@ -60,12 +60,22 @@ export default function Post() {
       return
     }
 
+    // Normalize link to include protocol so it becomes clickable
+    let normalizedLink = link.trim() || null
+    if (resourceType === 'link' && normalizedLink) {
+      // If the link already has a scheme (e.g., http:, https:, mailto:, ftp:), don't modify it.
+      const hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:/i.test(normalizedLink)
+      if (!hasScheme && !normalizedLink.startsWith('//')) {
+        normalizedLink = 'https://' + normalizedLink
+      }
+    }
+
     const payload = {
       title: title.trim(),
       description: description.trim(),
       resourceType,
       file: fileData,
-      link: link.trim() || null,
+      link: normalizedLink,
       likes: 0,
       dislikes: 0,
     }

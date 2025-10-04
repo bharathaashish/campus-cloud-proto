@@ -35,12 +35,16 @@ router.post('/', auth, [
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-  const { title, description, resourceType, file } = req.body;
+  const { title, description, resourceType, file, link } = req.body;
+  // Debug: log incoming body to help verify link is being sent
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug('POST /api/posts body:', JSON.stringify(req.body && typeof req.body === 'object' ? req.body : req.body?.toString?.() || req.body))
+  }
   const author = req.user.email.split('@')[0];
   const authorEmail = req.user.email;
   const authorRole = req.user.role;
 
-  // Rate limit for students: 1 post per week
+    // Rate limit for students: 1 post per week
   if (req.user.role === 'student') {
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const recentPost = await Post.findOne({
@@ -52,6 +56,11 @@ router.post('/', auth, [
       return res.status(429).json({ message: `You can only post once per week. Please wait ${remainingDays} day(s).` });
     }
   }
+
+    // Validate link posts
+    if (resourceType === 'link' && (!link || !link.toString().trim())) {
+      return res.status(400).json({ message: 'Please provide a valid link for resourceType "link".' });
+    }
 
   try {
     // Validate file size if file is present (assuming base64 string)
@@ -75,6 +84,7 @@ router.post('/', auth, [
       authorEmail,
       authorRole,
       file: null,
+      link: null,
     };
 
     if (file) {
@@ -85,10 +95,27 @@ router.post('/', auth, [
       }
     }
 
+    if (link) {
+      // store trimmed string link
+      let normalized = typeof link === 'string' ? link.trim() : link.toString().trim();
+      if (normalized) {
+        const hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:/i.test(normalized)
+        if (!hasScheme && !normalized.startsWith('//')) {
+          normalized = 'https://' + normalized
+        }
+      }
+      postData.link = normalized;
+    }
+
     const post = new Post(postData);
     await post.save();
+    // Debug: log saved post id and link
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('Saved post:', JSON.stringify({ id: post._id, link: post.link }))
+    }
     res.status(201).json(post);
   } catch (err) {
+    console.error('Error creating post:', err)
     res.status(500).json({ message: 'Server error' });
   }
 });
