@@ -23,9 +23,9 @@ export function AppProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     try {
       const raw = localStorage.getItem('campus_cloud_theme')
-      return raw || 'dark'
+      return raw || 'nightfall'
     } catch (e) {
-      return 'dark'
+      return 'nightfall'
     }
   })
 

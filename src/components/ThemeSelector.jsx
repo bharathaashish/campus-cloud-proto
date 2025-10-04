@@ -5,7 +5,7 @@ export default function ThemeSelector() {
   const { theme, setTheme } = useAppContext()
 
   const themes = [
-    { name: 'dark', label: 'Dark' },
+    { name: 'nightfall', label: 'Nightfall' },
     { name: 'lavender', label: 'Lavender' },
     { name: 'monochrome', label: 'Monochrome' }
   ]
