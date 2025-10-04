@@ -5,8 +5,9 @@ export default function ThemeSelector() {
   const { theme, setTheme } = useAppContext()
 
   const themes = [
-    { name: 'monochrome', label: 'Monochrome' },
-    { name: 'Lavender', label: 'Lavender' }
+    { name: 'dark', label: 'Dark' },
+    { name: 'lavender', label: 'Lavender' },
+    { name: 'monochrome', label: 'Monochrome' }
   ]
 
   return (
@@ -14,7 +15,7 @@ export default function ThemeSelector() {
       <select
         value={theme}
         onChange={(e) => setTheme(e.target.value)}
-        className="bg-gray-800 text-gray-100 px-3 py-1 rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="bg-theme-accent text-theme-primary px-3 py-2 rounded-lg border border-theme focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
       >
         {themes.map((t) => (
           <option key={t.name} value={t.name}>{t.label}</option>

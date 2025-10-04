@@ -23,19 +23,23 @@ export function AppProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     try {
       const raw = localStorage.getItem('campus_cloud_theme')
-      return raw || 'monochrome'
+      return raw || 'dark'
     } catch (e) {
-      return 'monochrome'
+      return 'dark'
     }
   })
 
   function setTheme(newTheme) {
     setThemeState(newTheme)
+    localStorage.setItem('campus_cloud_theme', newTheme)
+    // Apply theme class to document
+    document.documentElement.className = `theme-${newTheme}`
   }
 
   useEffect(() => {
-    localStorage.setItem('campus_cloud_theme', theme)
-  }, [theme])
+    // Apply initial theme
+    document.documentElement.className = `theme-${theme}`
+  }, [])
 
   useEffect(() => {
     if (user?.token) {

@@ -1,3 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Theme Utility Classes */
+@layer utilities {
+  .bg-theme-primary {
+    background-color: var(--bg-primary);
+  }
+  
+  .bg-theme-secondary {
+    background-color: var(--bg-secondary);
+  }
+  
+  .bg-theme-accent {
+    background-color: var(--bg-accent);
+  }
+  
+  .text-theme-primary {
+    color: var(--text-primary);
+  }
+  
+  .text-theme-secondary {
+    color: var(--text-secondary);
+  }
+  
+  .text-theme-inverse {
+    color: var(--text-inverse);
+  }
+  
+  .border-theme {
+    border-color: var(--border-color);
+  }
+  
+  .btn-theme-primary {
+    background-color: var(--button-primary);
+    color: var(--text-inverse);
+  }
+  
+  .btn-theme-primary:hover {
+    background-color: var(--button-hover);
+  }
+  
+  /* Reusable form input styling */
+  .input-theme {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    padding-left: 2.5rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s;
+  }
+  
+  .input-theme:focus {
+    border-color: var(--button-primary);
+    box-shadow: 0 0 0 2px var(--button-primary);
+  }
+  
+  .input-theme::placeholder {
+    color: var(--text-secondary);
+  }
+  
+  /* Card styling */
+  .card-theme {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+  }
+  
+  .card-theme:hover {
+    background-color: var(--bg-accent);
+  }
+}
