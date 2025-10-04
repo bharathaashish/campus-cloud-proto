@@ -46,9 +46,9 @@ export default function SearchResults() {
       ) : (
         <div className="space-y-4">
           {results.map((p) => (
-            <article key={p._id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+            <article key={p._id} className="card-theme rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
               <div className="flex">
-                <div className="flex flex-col items-center p-4 bg-gray-50">
+                <div className="flex flex-col items-center p-4 bg-theme-accent">
                   <button
                     onClick={() => {
                       if (!isLoggedIn) return alert('Please log in to like')
@@ -59,7 +59,7 @@ export default function SearchResults() {
                   >
                     ▲
                   </button>
-                  <span className="text-sm font-medium text-gray-700">{(p.likes || 0) - (p.dislikes || 0)}</span>
+                  <span className="text-sm font-medium text-theme-primary">{(p.likes || 0) - (p.dislikes || 0)}</span>
                   <button
                     onClick={() => {
                       if (!isLoggedIn) return alert('Please log in to dislike')
@@ -72,10 +72,10 @@ export default function SearchResults() {
                   </button>
                 </div>
                 <div className="flex-1 p-4">
-                  <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
-                  <p className="text-sm text-gray-600 mb-2">Posted by {p.author} • {p.resourceType} • 👁 {p.views || 0} views</p>
-                  <p className="text-gray-700 text-sm mb-4">{p.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                  <h3 className="font-semibold text-lg mb-2 text-theme-primary">{p.title}</h3>
+                  <p className="text-sm text-theme-secondary mb-2">Posted by {p.author} • {p.resourceType} • 👁 {p.views || 0} views</p>
+                  <p className="text-theme-primary text-sm mb-4">{p.description}</p>
+                  <div className="flex items-center gap-4 text-sm text-theme-secondary mb-4">
                     {reports.some(r => r.postId?._id === p._id && r.reporter === user.email) ? (
                       <span className="text-orange-600">Already reported</span>
                     ) : (
@@ -112,7 +112,7 @@ export default function SearchResults() {
                   {reported[p._id] && <div className="bg-orange-50 text-orange-700 text-sm p-2 mt-2 rounded">Reported — admin will review</div>}
                 </div>
                 {p.thumbnail && (
-                  <div className="w-24 h-24 bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <div className="w-24 h-24 bg-theme-accent flex items-center justify-center overflow-hidden">
                     <img src={p.thumbnail} alt={p.title} className="w-full h-full object-cover" />
                   </div>
                 )}

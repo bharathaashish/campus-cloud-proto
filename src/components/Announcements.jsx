@@ -28,20 +28,20 @@ export default function Announcements() {
   if (announcements.length === 0) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Announcements</h2>
-        <p className="text-gray-600">No announcements at this time. Check back later!</p>
+        <h2 className="text-3xl font-bold text-theme-primary mb-4">Announcements</h2>
+        <p className="text-theme-secondary">No announcements at this time. Check back later!</p>
       </div>
     )
   }
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Announcements</h2>
+      <h2 className="text-3xl font-bold text-theme-primary mb-6">Announcements</h2>
       <div className="space-y-4">
         {announcements.map((p) => (
-          <article key={p._id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          <article key={p._id} className="card-theme rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <div className="flex">
-              <div className="flex flex-col items-center p-4 bg-gray-50">
+              <div className="flex flex-col items-center p-4 bg-theme-accent">
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -53,7 +53,7 @@ export default function Announcements() {
                 >
                   ▲
                 </button>
-                <span className="text-sm font-medium text-gray-700">{(p.likes || 0) - (p.dislikes || 0)}</span>
+                <span className="text-sm font-medium text-theme-primary">{(p.likes || 0) - (p.dislikes || 0)}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()

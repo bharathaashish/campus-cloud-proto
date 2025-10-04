@@ -8,8 +8,8 @@ export default function Reports() {
   if (!user || user.role !== 'admin') {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h2>
-        <p className="text-gray-600">This page is for administrators only.</p>
+        <h2 className="text-2xl font-bold text-theme-primary mb-4">Access Denied</h2>
+        <p className="text-theme-secondary">This page is for administrators only.</p>
       </div>
     )
   }
@@ -27,20 +27,20 @@ export default function Reports() {
   if (reportedPosts.length === 0) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Review Reported Posts</h2>
-        <p className="text-gray-500">No reported posts at this time.</p>
+        <h2 className="text-2xl font-bold text-theme-primary mb-4">Review Reported Posts</h2>
+        <p className="text-theme-secondary">No reported posts at this time.</p>
       </div>
     )
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">Review Reported Posts</h2>
+      <h2 className="text-2xl font-bold mb-4 text-theme-primary">Review Reported Posts</h2>
       <div className="space-y-4">
         {reportedPosts.map((p) => (
-          <article key={p._id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          <article key={p._id} className="card-theme rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <div className="flex">
-              <div className="flex flex-col items-center p-4 bg-gray-50">
+              <div className="flex flex-col items-center p-4 bg-theme-accent">
                 <button
                   onClick={() => likePost(p._id)}
                   disabled={(p.likedBy || []).includes(user.email)}
@@ -48,7 +48,7 @@ export default function Reports() {
                 >
                   ▲
                 </button>
-                <span className="text-sm font-medium text-gray-700">{(p.likes || 0) - (p.dislikes || 0)}</span>
+                <span className="text-sm font-medium text-theme-primary">{(p.likes || 0) - (p.dislikes || 0)}</span>
                 <button
                   onClick={() => dislikePost(p._id)}
                   disabled={(p.dislikedBy || []).includes(user.email)}
@@ -109,7 +109,7 @@ export default function Reports() {
                 </div>
               </div>
               {p.thumbnail && (
-                <div className="w-24 h-24 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div className="w-24 h-24 bg-theme-accent flex items-center justify-center overflow-hidden">
                   <img src={p.thumbnail} alt={p.title} className="w-full h-full object-cover" />
                 </div>
               )}

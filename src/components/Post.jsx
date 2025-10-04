@@ -104,34 +104,34 @@ export default function Post() {
 
   return (
     <form onSubmit={submit} className="max-w-2xl mx-auto space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800 text-center">Create Post</h2>
+      <h2 className="text-3xl font-bold text-theme-primary text-center">Create Post</h2>
       <div>
-        <label className="block text-sm font-medium mb-2">Title</label>
+        <label className="block text-sm font-medium text-theme-primary mb-2">Title</label>
         <input 
           value={title} 
           onChange={(e) => setTitle(e.target.value)} 
           placeholder="Title" 
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Description</label>
+        <label className="block text-sm font-medium text-theme-primary mb-2">Description</label>
         <textarea 
           value={description} 
           onChange={(e) => setDescription(e.target.value)} 
           placeholder="Description"
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="w-full px-3 py-2 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">Resource type</label>
+        <label className="block text-sm font-medium text-theme-primary mb-2">Resource type</label>
         <select 
           value={resourceType} 
           onChange={(e) => setResourceType(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 bg-theme-secondary border border-theme rounded-lg text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="notes">Notes (text)</option>
           <option value="file">File (image / pdf)</option>
@@ -141,11 +141,11 @@ export default function Post() {
 
       {resourceType === 'file' && (
         <div>
-          <label className="block text-sm font-medium mb-2">Upload file</label>
-          <input type="file" accept="image/*,application/pdf" onChange={handleFile} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <label className="block text-sm font-medium text-theme-primary mb-2">Upload file</label>
+          <input type="file" accept="image/*,application/pdf" onChange={handleFile} className="w-full px-3 py-2 bg-theme-secondary border border-theme rounded-lg text-theme-primary focus:outline-none focus:ring-2 focus:ring-blue-500" />
           {fileData && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <strong className="block mb-2">{fileData.name}</strong>
+            <div className="mt-4 p-4 bg-theme-accent rounded-lg">
+              <strong className="block mb-2 text-theme-primary">{fileData.name}</strong>
               {fileData.type.startsWith('image/') && <img src={fileData.data} alt="preview" className="max-w-48 rounded-lg" />}
             </div>
           )}
@@ -154,12 +154,12 @@ export default function Post() {
 
       {resourceType === 'link' && (
         <div>
-          <label className="block text-sm font-medium mb-2">Link URL</label>
+          <label className="block text-sm font-medium text-theme-primary mb-2">Link URL</label>
           <input 
             value={link} 
             onChange={(e) => setLink(e.target.value)} 
             placeholder="https://..." 
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-theme-secondary border border-theme rounded-lg text-theme-primary placeholder:text-theme-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       )}
@@ -167,7 +167,7 @@ export default function Post() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-lg font-medium transition-colors disabled:cursor-not-allowed"
+        className="w-full btn-theme-primary py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Adding Post...' : 'Add Post'}
       </button>
