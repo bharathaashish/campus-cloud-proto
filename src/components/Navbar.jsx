@@ -13,13 +13,22 @@ export default function Navbar() {
     <header className="bg-theme-secondary shadow-sm border-b border-theme fixed top-0 left-0 right-0 z-50">
       <div className="px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-2xl font-bold text-theme-primary hover:text-theme-secondary transition-colors">
-            Campus Cloud
-          </Link>
-          
+          <div className="relative group">
+            <button className="text-xl font-bold text-theme-primary hover:text-theme-secondary transition-colors flex items-center space-x-1">
+              <span>Campus Cloud</span>
+              <svg className="w-4 h-4 mt-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div className="absolute left-0 mt-2 w-48 bg-theme-secondary border border-theme rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+              <div className="px-4 py-2 text-xs font-semibold text-theme-secondary uppercase border-b border-theme">Section</div>
+              <a href="/achievements" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Achievements</a>
+            </div>
+          </div>
+
           {/* Only show navigation links if user is logged in */}
           {isLoggedIn && (
-            <nav className="flex items-center space-x-8">
+            <nav className="flex items-center space-x-4">
               <Link to="/" className="text-theme-primary hover:text-theme-secondary font-medium transition-colors">
                 Home
               </Link>
