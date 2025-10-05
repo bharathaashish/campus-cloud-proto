@@ -1,6 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Post = require('../models/Post');
+const User = require('../models/User');
 const { auth } = require('./auth');
 
 const router = express.Router();
@@ -142,6 +143,7 @@ router.post('/:id/like', auth, async (req, res) => {
     post.dislikedBy = dislikedBy;
 
     await post.save();
+    await User.findOneAndUpdate({ email: post.authorEmail }, { $inc: { totalLikes: 1 } });
     res.json(post);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -164,6 +166,7 @@ router.post('/:id/dislike', auth, async (req, res) => {
     if (wasLiked) {
       likedBy.splice(likedBy.indexOf(req.user.email), 1);
       post.likes = Math.max(0, post.likes - 1);
+      await User.findOneAndUpdate({ email: post.authorEmail }, { $inc: { totalLikes: -1 } });
     }
     post.dislikes += 1;
     post.likedBy = likedBy;
