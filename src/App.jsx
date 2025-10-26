@@ -12,6 +12,7 @@ import Admin from './components/Admin'
 import Reports from './components/Reports'
 import Achievements from './components/Achievements'
 import MyPosts from './components/MyPosts'
+import Popular from './components/Popular'
 import RequireAuth from './components/RequireAuth'
 import Navbar from './components/Navbar'
 import { useAppContext } from './context/AppContext'
@@ -53,6 +54,7 @@ export default function App() {
                 <Route path="/announcements" element={<RequireAuth><Announcements /></RequireAuth>} />
                 <Route path="/reports" element={<RequireAuth adminOnly={true}><Reports /></RequireAuth>} />
                 <Route path="/achievements" element={<RequireAuth><Achievements /></RequireAuth>} />
+                <Route path="/popular" element={<RequireAuth><Popular /></RequireAuth>} />
                 <Route path="/my-posts" element={<RequireAuth><MyPosts /></RequireAuth>} />
               </Routes>
             </div>

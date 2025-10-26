@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SearchBar from './SearchBar'
 import ThemeSelector from './ThemeSelector'
@@ -8,23 +8,57 @@ export default function Navbar() {
   const { user, logout } = useAppContext()
   const isAdmin = user && user.role === 'admin'
   const isLoggedIn = !!user
+  const [dropdownOpen, setDropdownOpen] = useState(false)
 
   return (
     <header className="bg-theme-secondary shadow-sm border-b border-theme fixed top-0 left-0 right-0 z-50">
-      <div className="px-4">
+      <div className="px-4" onClick={() => setDropdownOpen(false)}>
         <div className="flex items-center justify-between h-16">
-          <div className="relative group">
-            <button className="text-xl font-bold text-theme-primary hover:text-theme-secondary transition-colors flex items-center space-x-1">
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setDropdownOpen(!dropdownOpen)
+              }}
+              className="text-xl font-bold text-theme-primary hover:text-theme-secondary transition-colors flex items-center space-x-1"
+            >
               <span>Campus Cloud</span>
               <svg className="w-4 h-4 mt-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
-            <div className="absolute left-0 mt-2 w-48 bg-theme-secondary border border-theme rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
-              <a href="/" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Home</a>
-              <a href="/my-posts" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">My Posts</a>
-              <a href="/achievements" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Achievements</a>
-            </div>
+            {dropdownOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-theme-secondary border border-theme rounded-md shadow-lg z-50">
+                <a
+                  href="/"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors"
+                >
+                  Home
+                </a>
+                <a
+                  href="/popular"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors"
+                >
+                  Popular
+                </a>
+                <a
+                  href="/my-posts"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors"
+                >
+                  My Posts
+                </a>
+                <a
+                  href="/achievements"
+                  onClick={() => setDropdownOpen(false)}
+                  className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors"
+                >
+                  Achievements
+                </a>
+              </div>
+            )}
           </div>
 
           {/* Only show navigation links if user is logged in */}
