@@ -27,7 +27,7 @@ export default function Home() {
   }, [posts, incrementView, user])
 
   const featured = posts.filter((p) => p.authorRole === 'teacher')
-  const suggestions = [...posts].sort((a, b) => ((b.likes || 0) + (b.views || 0)) - ((a.likes || 0) + (a.views || 0))).slice(0, 5)
+  const suggestions = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5)
   const others = posts.filter((p) => p.authorRole === 'student')
 
   return (
