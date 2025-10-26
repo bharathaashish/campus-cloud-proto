@@ -190,13 +190,18 @@ router.post('/:id/view', async (req, res) => {
   }
 });
 
-// Delete post (admin only)
+// Delete post (admin or post author)
 router.delete('/:id', auth, async (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
-
   try {
-    const post = await Post.findByIdAndDelete(req.params.id);
+    const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    // Allow deletion if user is admin or the author of the post
+    if (req.user.role !== 'admin' && req.user.email !== post.authorEmail) {
+      return res.status(403).json({ message: 'You can only delete your own posts' });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
     res.json({ message: 'Post deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });

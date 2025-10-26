@@ -22,6 +22,7 @@ export default function Navbar() {
             </button>
             <div className="absolute left-0 mt-2 w-48 bg-theme-secondary border border-theme rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
               <a href="/achievements" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Achievements</a>
+              <a href="/my-posts" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">My Posts</a>
             </div>
           </div>
 

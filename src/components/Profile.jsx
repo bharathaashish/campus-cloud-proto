@@ -86,7 +86,6 @@ export default function Profile() {
           <p className="text-theme-primary"><strong>Date of Birth:</strong> {formattedDOB}</p>
           <p className="text-theme-primary"><strong>Course:</strong> {user.course}</p>
           <p className="text-theme-primary"><strong>Specialization:</strong> {user.specialization}</p>
-          <p className="text-theme-primary"><strong>Total Likes:</strong> {(user.totalLikes || 0).toLocaleString()}</p>
           <div className="flex gap-2 mt-4">
             <button onClick={handleEdit} className="btn-theme-primary px-4 py-2 rounded-lg">Edit Profile</button>
             <button onClick={() => logout()} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">Logout</button>

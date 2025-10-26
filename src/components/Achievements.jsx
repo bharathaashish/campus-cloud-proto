@@ -3,7 +3,6 @@ import { useAppContext } from '../context/AppContext'
 
 export default function Achievements() {
   const { user } = useAppContext()
-  const totalLikes = user?.totalLikes || 0
 
   const achievements = [
     { name: 'Social Butterfly', likes: 100, description: `Get ${(100).toLocaleString()} likes` },
@@ -12,18 +11,15 @@ export default function Achievements() {
     { name: 'Overlord', likes: 100000, description: `Get ${(100000).toLocaleString()} likes` },
   ]
 
-  const unlockedAchievements = achievements.filter(a => totalLikes >= a.likes)
-  const nextAchievement = achievements.find(a => totalLikes < a.likes)
+  const unlockedAchievements = achievements.filter(a => (user?.totalLikes || 0) >= a.likes)
+  const nextAchievement = achievements.find(a => (user?.totalLikes || 0) < a.likes)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold mb-6 text-theme-primary">Achievements</h1>
-      <div className="mb-6">
-        <p className="text-theme-secondary">Total Likes: <span className="font-semibold text-theme-primary">{totalLikes.toLocaleString()}</span></p>
-      </div>
       <div className="space-y-6">
         {achievements.map((achievement, index) => {
-          const isUnlocked = totalLikes >= achievement.likes
+          const isUnlocked = (user?.totalLikes || 0) >= achievement.likes
           return (
             <div
               key={index}

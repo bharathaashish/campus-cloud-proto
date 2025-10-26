@@ -4,7 +4,7 @@ import FileViewer from './FileViewer'
 import PostModal from './PostModal'
 
 export default function Home() {
-  const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView } = useAppContext()
+  const { posts, likePost, dislikePost, reportPost, reports, user, isLoggedIn, incrementView, deletePost } = useAppContext()
   const [reported, setReported] = useState({})
   const [viewerOpen, setViewerOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
@@ -85,6 +85,20 @@ export default function Home() {
               >
                 👎 {p.dislikes || 0}
               </button>
+              {isLoggedIn && user.email === p.authorEmail && (
+                <button
+                  onClick={async (e) => {
+                    e.stopPropagation()
+                    if (confirm('Are you sure you want to delete this post?')) {
+                      const res = await deletePost(p._id)
+                      if (!res.success) alert(res.message)
+                    }
+                  }}
+                  className="text-red-600 hover:text-red-700 text-sm"
+                >
+                  🗑️ Delete
+                </button>
+              )}
               {reports.some(r => r.postId?._id === p._id && r.reporter === user.email) ? (
                 <span className="text-orange-600 text-sm">Reported</span>
               ) : (
@@ -157,6 +171,20 @@ export default function Home() {
               >
                 👎 {s.dislikes || 0}
               </button>
+              {isLoggedIn && user.email === s.authorEmail && (
+                <button
+                  onClick={async (e) => {
+                    e.stopPropagation()
+                    if (confirm('Are you sure you want to delete this post?')) {
+                      const res = await deletePost(s._id)
+                      if (!res.success) alert(res.message)
+                    }
+                  }}
+                  className="text-red-600 hover:text-red-700 text-sm"
+                >
+                  🗑️ Delete
+                </button>
+              )}
               {reports.some(r => r.postId?._id === s._id && r.reporter === user.email) ? (
                 <span className="text-orange-600 text-sm">Reported</span>
               ) : (

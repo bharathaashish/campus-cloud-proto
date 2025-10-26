@@ -129,6 +129,11 @@ export function AppProvider({ children }) {
     try {
       const res = await axios.post(`${API_BASE}/posts/${id}/like`)
       setPosts((prev) => prev.map((p) => (p._id === id ? res.data : p)))
+      // Update user's totalLikes if they liked their own post
+      const post = posts.find(p => p._id === id)
+      if (post && post.authorEmail === user.email) {
+        setUser(prev => ({ ...prev, totalLikes: (prev.totalLikes || 0) + 1 }))
+      }
       return { success: true }
     } catch (e) {
       return { success: false, message: e.response?.data?.message || 'Failed to like post' }
@@ -140,6 +145,11 @@ export function AppProvider({ children }) {
     try {
       const res = await axios.post(`${API_BASE}/posts/${id}/dislike`)
       setPosts((prev) => prev.map((p) => (p._id === id ? res.data : p)))
+      // Update user's totalLikes if they disliked their own post and it was previously liked
+      const post = posts.find(p => p._id === id)
+      if (post && post.authorEmail === user.email && post.likedBy.includes(user.email)) {
+        setUser(prev => ({ ...prev, totalLikes: Math.max(0, (prev.totalLikes || 0) - 1) }))
+      }
       return { success: true }
     } catch (e) {
       return { success: false, message: e.response?.data?.message || 'Failed to dislike post' }
