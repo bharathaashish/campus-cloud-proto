@@ -30,6 +30,9 @@ export default function MyPosts() {
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-theme-primary">{p.title}</h3>
               <p className="text-sm text-theme-secondary">{p.author} • {p.resourceType}</p>
+              <p className="text-xs text-theme-secondary">
+                {new Date(p.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })}
+              </p>
               {p.link && (
                 <div className="mt-1">
                   <a

@@ -21,17 +21,15 @@ export default function Navbar() {
               </svg>
             </button>
             <div className="absolute left-0 mt-2 w-48 bg-theme-secondary border border-theme rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
-              <a href="/achievements" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Achievements</a>
+              <a href="/" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Home</a>
               <a href="/my-posts" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">My Posts</a>
+              <a href="/achievements" className="block px-4 py-2 text-theme-primary hover:bg-theme-accent hover:text-theme-primary transition-colors">Achievements</a>
             </div>
           </div>
 
           {/* Only show navigation links if user is logged in */}
           {isLoggedIn && (
             <nav className="flex items-center space-x-4">
-              <Link to="/" className="text-theme-primary hover:text-theme-secondary font-medium transition-colors">
-                Home
-              </Link>
               <Link to="/post" className="text-theme-primary hover:text-theme-secondary font-medium transition-colors">
                 Create Post
               </Link>

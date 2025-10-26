@@ -39,6 +39,9 @@ export default function PostModal({ post, onClose }) {
         <p className="text-sm text-theme-secondary mb-4">
           Posted by <strong>{post.author}</strong> • {post.resourceType}
         </p>
+        <p className="text-xs text-theme-secondary mb-4">
+          {new Date(post.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })}
+        </p>
         {post.file && (
           <div className="mb-4">
             {post.file.startsWith('data:image/') ? (
